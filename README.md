@@ -34,13 +34,13 @@ docker build -t marblestation/adsbackendtask .
 Run using the web service as it was copied when the image was built:
 
 ```bash
-docker run -it --rm -p 127.0.0.1:5000:5000 marblestation/adsbackendtask
+docker run -it --rm -p 127.0.0.1:5000:5000 -e ADS_DEV_KEY=K4aaZR79FowCVkPUxwMeYGnHEx5mVFJuwPvI5OYK marblestation/adsbackendtask
 ```
 
 Run using the current local web service (useful for development purposes):
 
 ```bash
-docker run -it --rm -p 127.0.0.1:5000:5000 -v Service:/app marblestation/adsbackendtask
+docker run -it --rm -p 127.0.0.1:5000:5000 -v ${PWD}/Service:/app marblestation/adsbackendtask
 ```
 
 In both cases, you can access the service with your browser: http://localhost:5000/resolve/Abt,%20H.%201990,%20ApJ,%20357,%201
