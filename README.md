@@ -31,7 +31,7 @@ docker build -t marblestation/adsbackendtask .
 
 ### Run container
 
-Run using the web service as it was copied when the image was built:
+Run using the web service as it was copied when the image was built (replace the ADS token by your own one):
 
 ```bash
 docker run -it --rm -p 127.0.0.1:5000:5000 -e ADS_DEV_KEY=K4aaZR79FowCVkPUxwMeYGnHEx5mVFJuwPvI5OYK marblestation/adsbackendtask
@@ -40,7 +40,7 @@ docker run -it --rm -p 127.0.0.1:5000:5000 -e ADS_DEV_KEY=K4aaZR79FowCVkPUxwMeYG
 Run using the current local web service (useful for development purposes):
 
 ```bash
-docker run -it --rm -p 127.0.0.1:5000:5000 -v ${PWD}/Service:/app marblestation/adsbackendtask
+docker run -it --rm -p 127.0.0.1:5000:5000 -e ADS_DEV_KEY=K4aaZR79FowCVkPUxwMeYGnHEx5mVFJuwPvI5OYK -v ${PWD}/Service:/app marblestation/adsbackendtask
 ```
 
 In both cases, you can access the service with your browser: http://localhost:5000/resolve/Abt,%20H.%201990,%20ApJ,%20357,%201
@@ -48,11 +48,11 @@ In both cases, you can access the service with your browser: http://localhost:50
 
 ## Running and testing
 
-If you do not want to use docker but just run the service in your system, you can launch it by executing:
+If you do not want to use docker but just run the service in your system, you can launch it by executing (replace the ADS token by your own one):
 
 ```bash
 cd Service/
-python app.py
+ADS_DEV_KEY=K4aaZR79FowCVkPUxwMeYGnHEx5mVFJuwPvI5OYK python app.py
 ```
 
 And you can access the service with your browser: http://localhost:5000/resolve/Abt,%20H.%201990,%20ApJ,%20357,%201
@@ -61,7 +61,11 @@ Or if you want to launch the automatic tests, you can execute:
 
 ```bash
 cd Service/
-python test.py
+ADS_DEV_KEY=K4aaZR79FowCVkPUxwMeYGnHEx5mVFJuwPvI5OYK python test.py
 ```
 
+## How to get an ADS API token
+
+1. Create an account and log in to the latest version of the [ADS](https://ui.adsabs.harvard.edu/)
+2. Push the "Generate a new key" button under Account - Customize settings - API Token
 
