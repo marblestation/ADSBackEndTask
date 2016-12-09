@@ -1,3 +1,4 @@
+from __future__ import division
 import os
 import urllib
 from flask import json
@@ -5,10 +6,14 @@ from ReferenceResolver.Tests.BaseTestCase import BaseTestCase
 
 class ResolveTestCase(BaseTestCase):
 
-    def _test_get_resolve(self, expected_response):
+    def _get_resolve(self, expected_response):
         response = self.app.get(urllib.quote("/resolve/"+expected_response['refstring']))
-        json_response = json.loads(response.get_data())
         self.assertEqual(response.status_code, 200)
+        json_response = json.loads(response.get_data())
+        return json_response
+
+    def _test_get_resolve(self, expected_response):
+        json_response = self._get_resolve(expected_response)
         # TODO: Validate status field
         status = json_response.pop('status', None) # Do not validate status field (we need to collect scores)
         self.assertEquals(json_response, expected_response)
@@ -63,14 +68,4 @@ class ResolveTestCase(BaseTestCase):
         expected_response = {u'refstring': 'Pollock, J. T. 1982, Ph. D. Thesis, University of Florida.', \
                              u'bibcode': '1982PhDT.........1P' }
         self._test_get_resolve(expected_response)
-
-    #def test_0009_reference_sample(self):
-        #import pandas as pd
-        #refsample = pd.read_fwf("ReferenceResolver/Tests/input/refsample.txt", widths=[19,10000], names=['bibcode', 'refstring'])
-        #for idx, row in refsample.iterrows():
-            #expected_response = {u'refstring': row['refstring'], \
-                                  #u'bibcode': row['bibcode']}
-            #self._test_get_resolve(expected_response)
-            #if idx > 2:
-                #break
 

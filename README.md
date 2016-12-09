@@ -69,3 +69,26 @@ ADS_DEV_KEY=K4aaZR79FowCVkPUxwMeYGnHEx5mVFJuwPvI5OYK python test.py
 1. Create an account and log in to the latest version of the [ADS](https://ui.adsabs.harvard.edu/)
 2. Push the "Generate a new key" button under Account - Customize settings - API Token
 
+
+## Tests
+
+### Unit tests
+
+```bash
+python test.py
+```
+
+```bash
+python test.py --log-filename ReferenceResolver/Tests/output/unit_tests_log.txt
+```
+
+### Sample of reference strings and bibcodes
+
+```bash
+python test_sample_process.py ReferenceResolver/Tests/input/refsample.txt ReferenceResolver/Tests/output/refsample_analysed.txt
+```
+
+```bash
+python test_sample_check_results.py ReferenceResolver/Tests/output/refsample_analysed.txt ReferenceResolver/Tests/output/refsample_analysed_scores_hist.pdf ReferenceResolver/Tests/output/refsample_analysed_scores_hist.png
+```
+

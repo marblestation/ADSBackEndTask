@@ -6,9 +6,10 @@ from flask_restful import fields
 class ResolveModel(db.Model):
     __tablename__ = 'resolve'
     id = db.Column(db.Integer, primary_key = True)
-    refstring = db.Column(db.String(128))
-    bibcode = db.Column(db.String(128))
+    refstring = db.Column(db.String(512))
+    bibcode = db.Column(db.String(19))
     ip = db.Column(db.String(15), unique=False)
+    status = db.Column(db.String(128))
     creation_date = db.Column(db.DateTime)
 
     def __init__(self, **kwargs):
@@ -21,5 +22,6 @@ class ResolveModel(db.Model):
     resolve_marshaller = {
         'refstring': fields.String,
         'bibcode': fields.String,
+        'status': fields.String,
     }
 
