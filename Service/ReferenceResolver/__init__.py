@@ -4,7 +4,7 @@ from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from ReferenceResolver.Common.DataBase import init_db
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static/')
 db_filename = "resolve.db"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+db_filename
 app.config['SECRET_KEY'] = 'z3%kr3t66_ads21/*_k3'
@@ -20,3 +20,7 @@ if not os.path.exists("ReferenceResolver/"+db_filename):
 from Resources import Resolve
 
 api.add_resource(Resolve,  '/resolve/<string:refstring>', endpoint='resolve')
+
+@app.route('/')
+def root():
+    return app.send_static_file('index.html')

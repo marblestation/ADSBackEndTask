@@ -1,0 +1,108 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="ADS Back-End Task">
+        <meta name="keywords" content="ads,refstring,bibcode,resolver">
+        <meta name="author" content="Sergi Blanco-Cuaresma">
+        <link rel="icon" type="image/png" href="http://www.blancocuaresma.com/s/user/themes/blancocuaresma/images/favicon.png">
+
+        <title>ADS Back-End Task | S. Blanco-Cuaresma</title>
+
+        <!-- jQuery -->
+        <script
+          src="https://code.jquery.com/jquery-3.1.1.min.js"
+          integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+          crossorigin="anonymous"></script>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    </head>
+
+    <body>
+        <nav class="navbar-default navbar-inverse" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/s">S. Blanco-Cuaresma</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="active"><a href="/">ADS Back-End Task</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+
+        <div class="container">
+            <div class="jumbotron">
+                <div class="container">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon3">https://localhost:5000/resolve/</span>
+                        <input type="text" class="form-control" id="refstring" placeholder="Reference string" aria-describedby="basic-addon1">
+                    </div>
+                        <span class="input-group-btn">
+                            <button id="resolve" class="btn btn-default" type="button" style="display: block; width: 100%;">Resolve!</button>
+                        </span>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">refstring</span>
+                        <input type="text" class="form-control" placeholder="" aria-describedby="basic-addon1" readonly id="response_refstring">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">bibcode</span>
+                        <input type="text" class="form-control" placeholder="" aria-describedby="basic-addon1" readonly id="response_bibcode">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">status&nbsp;&nbsp;</span>
+                        <input type="text" class="form-control" placeholder="" aria-describedby="basic-addon1" readonly id="response_status">
+                    </div>
+                    <div id="resolving" align="center" style="display: none;">
+                        <span class="glyphicon glyphicon-refresh" aria-hidden=true></span> <span class=glyphicon-class>resolving...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+        $('#resolve').click(function(){ 
+            var name = $("#refstring").val();
+
+            if (! name ) {
+                // Cancel the default action by returning false
+                return false;
+            } else {
+                // Do not accept '/' in refstring or they will be interpret as part of the URL
+                name = name.replace("/", ":")
+            }
+            $("#response_bibcode").val();
+            $("#response_refstring").val();
+            $("#response_status").val();
+            $("#resolving").show();
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: 'http://localhost:5000/resolve/' + name,
+                success: function (data) {
+                    $("#response_bibcode").val(data['bibcode']);
+                    $("#response_refstring").val(data['refstring']);
+                    $("#response_status").val(data['status']);
+                    },
+                complete: function() {
+                    $("#resolving").hide();
+                }
+                });
+        })
+        </script>
+    </body>
+</html>

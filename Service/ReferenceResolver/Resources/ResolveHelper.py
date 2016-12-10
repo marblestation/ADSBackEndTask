@@ -36,7 +36,7 @@ class ResolveHelper(object):
         self.authors_pattern.append(re.compile("^(?:"+surname_pattern+" ([A-Z]+[a-zA-Z]*))+(?:, |. |.)"))
 
         # WARNING: Year pattern valid for years between 1800 and 2016 only:
-        self.year_pattern = re.compile("(?:\(| )*(18\d\d|19\d\d|200\d|201[0-6])(?:, |. |,|.|\).|\))")
+        self.year_pattern = re.compile("(?:\(| )*(18\d\d|19\d\d|200\d|201[0-6])(?:, |. |,|.|\).|\)|$)")
         self.number_pattern = re.compile("\\d+")
         self.phd_pattern = re.compile("(Ph(?:\.)?D(?:\.)|(?:T|t)hesis|(?:D|d)issertation)")
 

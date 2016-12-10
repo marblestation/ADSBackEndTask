@@ -61,9 +61,6 @@ Run using the current local web service (useful for development purposes):
 docker run -it --rm -p 127.0.0.1:5000:5000 -e ADS_DEV_KEY=K4aaZR79FowCVkPUxwMeYGnHEx5mVFJuwPvI5OYK -v ${PWD}/Service:/app marblestation/adsbackendtask
 ```
 
-In both cases, you can access the service with your browser indicating the refstring in the same URL: http://localhost:5000/resolve/Abt,%20H.%201990,%20ApJ,%20357,%201
-
-
 ## Direct execution
 
 If you do not want to use docker but just run the service in your system, you can launch it by executing (replace the ADS token by your own one):
@@ -73,7 +70,21 @@ cd Service/
 python app.py
 ```
 
-And you can access the service with your browser indicating the refstring in the same URL: http://localhost:5000/resolve/Abt,%20H.%201990,%20ApJ,%20357,%201
+## Accessing the service
+
+The application includes a simple HTML page that uses jQuery to call the REST service and resolve the refstrings indicated by the user, you can access it via [http://localhost:5000/](http://localhost:5000/). But you can also interact directly with the REST service using your browser and adding the refstring to the end of the URL: [http://localhost:5000/resolve/](http://localhost:5000/resolve/Abt,%20H.%201990,%20ApJ,%20357,%201)
+
+It is also very easy to use the REST web service in an automatic way from a script. For instance, a python example:
+
+```python
+import requests
+import urllib
+refstring = "Abt, H. 1990, ApJ, 357, 1"
+r = requests.get('http://localhost:5000/resolve/'+urllib.quote(refstring.replace("/", ":")))
+response = r.json()
+print(response['bibcode'])
+print(response['status'])
+```
 
 
 ## Tests
