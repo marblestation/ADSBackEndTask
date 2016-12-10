@@ -4,6 +4,9 @@ from flask_restful import fields
 
 
 class ResolveModel(db.Model):
+    """
+    Database model representing reference resolution requests.
+    """
     __tablename__ = 'resolve'
     id = db.Column(db.Integer, primary_key = True)
     refstring = db.Column(db.String(512))

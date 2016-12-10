@@ -6,19 +6,11 @@ import tempfile
 
 class BaseTestCase(unittest.TestCase):
 
-    def setUp(self):
-        # Before every test
-        pass
-
-    def tearDown(self):
-        # After every test
-        pass
-
-    #---------------------------------------------------------------------------
-
     @classmethod
     def setUpClass(cls):
-        # Before instanciating the object
+        """
+        Create a temporary database before instanciating the unit test object.
+        """
         cls.db_fd, cls.db_filename = tempfile.mkstemp(suffix=".db")
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+cls.db_filename
         app.config['TESTING'] = True
@@ -27,7 +19,9 @@ class BaseTestCase(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        # Before destroying the Object
+        """
+        Erase the temporary database before destroying the unit test object.
+        """
         os.close(cls.db_fd)
         os.unlink(cls.db_filename)
 

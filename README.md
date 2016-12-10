@@ -1,6 +1,6 @@
 # ADS Back-end task
 
-Web service which receives a single string (bibliographic reference) and returns a json response containing the original string and the ADS identifier associated with the reference.
+Web service which receives a single string (bibliographic reference) and returns a JSON response containing the original string and the ADS identifier associated with the reference.
 
 For example, for an input parameter like:
 
@@ -11,13 +11,31 @@ Abt, H. 1990, ApJ, 357, 1
 The service will compute and return the expected identifier along with the original input string:
 
 
-```json
+```JSON
 {
    "refstring": "Abt, H. 1990, ApJ, 357, 1",
    "bibcode": "1990ApJ...357....1A"
 }
 ```
 
+## Requirements
+
+To be able to run/test the application, an ADS API token is needed. It can be obtain following these instructions:
+
+1. Create an account and log in to the latest version of the [ADS](https://ui.adsabs.harvard.edu/)
+2. Push the "Generate a new key" button under Account - Customize settings - API Token
+
+Then the key should be provided to the docker container or defined in the environment system like:
+
+```bash
+export ADS_DEV_KEY=K4aaZR79FowCVkPUxwMeYGnHEx5mVFJuwPvI5OYK 
+```
+
+If you want to run the application directly in your system (i.e., not using a docker container), then you need to make sure you have all the required python packages installed:
+
+```bash
+sudo pip install -r Service/requirements.txt
+```
 
 ## Docker container
 
@@ -43,52 +61,56 @@ Run using the current local web service (useful for development purposes):
 docker run -it --rm -p 127.0.0.1:5000:5000 -e ADS_DEV_KEY=K4aaZR79FowCVkPUxwMeYGnHEx5mVFJuwPvI5OYK -v ${PWD}/Service:/app marblestation/adsbackendtask
 ```
 
-In both cases, you can access the service with your browser: http://localhost:5000/resolve/Abt,%20H.%201990,%20ApJ,%20357,%201
+In both cases, you can access the service with your browser indicating the refstring in the same URL: http://localhost:5000/resolve/Abt,%20H.%201990,%20ApJ,%20357,%201
 
 
-## Running and testing
+## Direct execution
 
 If you do not want to use docker but just run the service in your system, you can launch it by executing (replace the ADS token by your own one):
 
 ```bash
 cd Service/
-ADS_DEV_KEY=K4aaZR79FowCVkPUxwMeYGnHEx5mVFJuwPvI5OYK python app.py
+python app.py
 ```
 
-And you can access the service with your browser: http://localhost:5000/resolve/Abt,%20H.%201990,%20ApJ,%20357,%201
-
-Or if you want to launch the automatic tests, you can execute:
-
-```bash
-cd Service/
-ADS_DEV_KEY=K4aaZR79FowCVkPUxwMeYGnHEx5mVFJuwPvI5OYK python test.py
-```
-
-## How to get an ADS API token
-
-1. Create an account and log in to the latest version of the [ADS](https://ui.adsabs.harvard.edu/)
-2. Push the "Generate a new key" button under Account - Customize settings - API Token
+And you can access the service with your browser indicating the refstring in the same URL: http://localhost:5000/resolve/Abt,%20H.%201990,%20ApJ,%20357,%201
 
 
 ## Tests
 
+The application includes unit tests and a special separated test that processes a big number of refstrings (only thought to verify the efficiency of the resolver, not for frequent testing).
+
 ### Unit tests
 
+The unit tests can be run by executing:
+
 ```bash
+cd Service/
 python test.py
 ```
 
+The output will be directly printed on the screen, but if we want to save our results to a file we can do so by executing:
+
 ```bash
+cd Service/
 python test.py --log-filename ReferenceResolver/Tests/output/unit_tests_log.txt
 ```
 
 ### Sample of reference strings and bibcodes
 
+The task included a file with an extensive list of bibcodes and refstrings, this test goes through all of them and saves the suggested bibcodes by the application:
+
 ```bash
 python test_sample_process.py ReferenceResolver/Tests/input/refsample.txt ReferenceResolver/Tests/output/refsample_analysed.txt
 ```
 
+Once the whole sample has been analysed, the results can be checked by executing:
+
 ```bash
-python test_sample_check_results.py ReferenceResolver/Tests/output/refsample_analysed.txt ReferenceResolver/Tests/output/refsample_analysed_scores_hist.pdf ReferenceResolver/Tests/output/refsample_analysed_scores_hist.png
+python test_sample_report.py ReferenceResolver/Tests/output/refsample_analysed.txt ReferenceResolver/Tests/output/refsample_analysed_scores_hist.pdf ReferenceResolver/Tests/output/refsample_analysed_scores_hist.png
 ```
+
+This will print some statistics using the python logging system, and it will create a histogram of the obtained scores comparing the total with the bibcodes that actually match the expected result (from the original sample file).
+
+![Score histogram](Service/ReferenceResolver/Tests/output/refsample_analysed_scores_hist.png?raw=true)
 

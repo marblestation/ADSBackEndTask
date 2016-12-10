@@ -1,5 +1,12 @@
 ﻿
 def init_db(db):
+    """
+    Erases database and creates the required schema from zero.
+
+    Parameters
+    ----------
+    db : SQLAchemy engine
+    """
     from ReferenceResolver.Models import ResolveModel
 
     db.drop_all()

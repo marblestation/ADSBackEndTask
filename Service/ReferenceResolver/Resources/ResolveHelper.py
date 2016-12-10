@@ -4,8 +4,25 @@ from adsutils import get_pub_abbreviation
 import ads
 
 class ResolveHelper(object):
+    """
+    Methods to extract information from a refstring and search on ADS API.
+
+    Attributes
+    ----------
+    authors_pattern : list
+        List of compiled regex patterns to match authors
+    year_pattern : regex
+        Compiled regex pattern to match years from 1800 to 2016
+    number_pattern : regex
+        Compiled regex pattern to match numbers
+    phd_pattern : regex
+        Compiled regex pattern to match PhD Thesis strings and equivalent
+    """
 
     def __init__(self):
+        """
+        Constructor. Compile regex patterns.
+        """
         # NOTE: Test regex in http://pythex.org/
         name_pattern = "([A-Z]\.(?: [A-Z]\.)?)"
         surname_pattern = "([A-Z]{1}[a-z]+(?:(?:-| )[A-Z]{1}[a-z]+)?)"
@@ -18,12 +35,27 @@ class ResolveHelper(object):
         #refstring = "Adainson M, Kerr Th, Whittet DCB, Duley WW. 1994. MNRAS 268:705-8"
         self.authors_pattern.append(re.compile("^(?:"+surname_pattern+" ([A-Z]+[a-zA-Z]*))+(?:, |. |.)"))
 
+        # WARNING: Year pattern valid for years between 1800 and 2016 only:
+        self.year_pattern = re.compile("(?:\(| )*(18\d\d|19\d\d|200\d|201[0-6])(?:, |. |,|.|\).|\))")
+        self.number_pattern = re.compile("\\d+")
+        self.phd_pattern = re.compile("(Ph(?:\.)?D(?:\.)|(?:T|t)hesis|(?:D|d)issertation)")
+
     def _match_authors(self, refstring, authors_pattern):
         """
-        Find author names on a reference string based on a pattern, which should
-        match author name+surname at the beginning of the refstring.
+        Extract authors at the beginning of the refstring given a regex pattern.
 
-        Return list of authors and the remaining unmatched reference string
+        Parameters
+        ----------
+        refstring : string
+        authors_pattern : compiled regex
+
+        Returns
+        -------
+        authors: list
+            List of list where first string is the author's surname and second
+            is the name.
+        remaining_refstring : string
+            The remaining unmatched reference string.
         """
         authors = []
         remaining_refstring = refstring
@@ -35,6 +67,23 @@ class ResolveHelper(object):
         return authors, remaining_refstring
 
     def extract_authors(self, refstring):
+        """
+        Extract authors at the beginning of the refstring.
+
+        Parameters
+        ----------
+        refstring : string
+
+        Returns
+        -------
+        first_author : string
+            Autho's surname and name in a single string.
+        authors : list
+            List of list where first string is the author's surname and second
+            is the name.
+        remaining_refstring : string
+            The remaining unmatched reference string.
+        """
         authors, remaining_refstring = self._match_authors(refstring, self.authors_pattern[0])
 
         if len(authors) == 0:
@@ -55,10 +104,22 @@ class ResolveHelper(object):
         return first_author, authors, remaining_refstring
 
     def extract_year(self, refstring):
+        """
+        Extract years from refstring.
+
+        Parameters
+        ----------
+        refstring : string
+
+        Returns
+        -------
+        year : string
+        remaining_refstring : string
+            The remaining unmatched reference string.
+        """
         # WARNING: Year pattern valid for years between 1800 and 2016 only:
-        year_pattern = re.compile("(?:\(| )*(18\d\d|19\d\d|200\d|201[0-6])(?:, |. |,|.|\).|\))")
-        years = year_pattern.findall(refstring)
-        remaining_refstring = year_pattern.sub('', refstring)
+        years = self.year_pattern.findall(refstring)
+        remaining_refstring = self.year_pattern.sub('', refstring)
 
         if len(years) == 0:
             year = None
@@ -69,16 +130,40 @@ class ResolveHelper(object):
         return year, remaining_refstring
 
     def extract_numbers(self, refstring):
+        """
+        Extract all the numbers from refstring.
+
+        Parameters
+        ----------
+        refstring : string
+
+        Returns
+        -------
+        numbers : list
+            List of strings with each number found.
+        remaining_refstring : string
+            The remaining unmatched reference string.
+        """
         # Find remaining number which may correspond to volume, page or other value
-        number_pattern = re.compile("\\d+")
-        numbers = number_pattern.findall(refstring)
-        remaining_refstring = number_pattern.sub('', refstring)
+        numbers = self.number_pattern.findall(refstring)
+        remaining_refstring = self.number_pattern.sub('', refstring)
         return numbers, remaining_refstring
 
     def extract_potential_bibstems(self, refstring):
+        """
+        Guess the potential bibstems based on the refstring.
+
+        Parameters
+        ----------
+        refstring : string
+
+        Returns
+        -------
+        potential_bibstems : dict
+            Dictionary with bibsterms as keys and scores as values.
+        """
         # Identify PhD Thesis
-        phd_pattern = re.compile("(Ph(?:\.)?D(?:\.)|(?:T|t)hesis|(?:D|d)issertation)")
-        if phd_pattern.search(refstring) is not None:
+        if self.phd_pattern.search(refstring) is not None:
             potential_bibstems = {'PhDT': 1}
         else:
             # Try to infer a publication
@@ -88,6 +173,36 @@ class ResolveHelper(object):
         return potential_bibstems
 
     def _get_score(self, first_author, authors, year, numbers, potential_bibstems, article_bibcode, article_authors, article_volume, article_page, article_bibstem):
+        """
+        Score an ADS article given the authors, year, number and bibstems found in the refstring.
+
+        Parameters
+        ----------
+        first_author : string
+            Autho's surname and name in a single string.
+        authors : list
+            List of list where first string is the author's surname and second
+            is the name.
+        year : string
+        numbers : list
+            List of strings with each number found.
+        potential_bibstems : dict
+            Dictionary with bibsterms as keys and scores as values.
+        article_bibcode : string
+            Bibcode of the article to be scored.
+        article_authors : list
+            Authors of the article to be scored.
+        article_volume : string
+            Volume of the article to be scored.
+        article_page : string
+            Page of the article to be scored.
+        article_bibstem : string
+            Bibstem of the article to be scored.
+
+        Returns
+        -------
+        score : float
+        """
         score = 0
         # Year should coincide with 4 first bibcode characthers
         if article_bibcode[:4] == year:
@@ -120,6 +235,30 @@ class ResolveHelper(object):
         return score
 
     def search_bibcode_in_ads(self, first_author, authors, year, numbers, potential_bibstems):
+        """
+        Search by first author and year using ADS API Search.
+
+        Parameters
+        ----------
+        first_author : string
+            Autho's surname and name in a single string.
+        authors : list
+            List of list where first string is the author's surname and second
+            is the name.
+        year : string
+        numbers : list
+            List of strings with each number found.
+        potential_bibstems : dict
+            Dictionary with bibsterms as keys and scores as values.
+
+        Returns
+        -------
+        bibcode : string
+            None if there has been an error or no matches were found.
+        status : string
+            In case of success it includes the score, otherwise it contains
+            information about the error.
+        """
         try:
             ## TODO: I do not manage to build a query forcing all the authors to be present
             ## TODO: ADS Search API is not looking for author's synonyms and I do not manage to activate that option

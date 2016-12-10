@@ -2,6 +2,8 @@ from ReferenceResolver.Tests import ResolveTestCase
 import sys
 import unittest
 import argparse
+from log import setup_logging
+setup_logging(log_level="warn")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run unit tests")

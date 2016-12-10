@@ -1,0 +1,73 @@
+...FFF.F
+======================================================================
+FAIL: test_0004_annual_reviews (ReferenceResolver.Tests.ResolveTestCase.ResolveTestCase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/docker/workspace/Sync/Data/Geneva/Postdocs/ADS/ADSBackEndTask/Service/ReferenceResolver/Tests/ResolveTestCase.py", line 81, in test_0004_annual_reviews
+    self._test_get_resolve(expected_response)
+  File "/home/docker/workspace/Sync/Data/Geneva/Postdocs/ADS/ADSBackEndTask/Service/ReferenceResolver/Tests/ResolveTestCase.py", line 44, in _test_get_resolve
+    self.assertEquals(json_response, expected_response)
+AssertionError: {u'refstring': u'Adainson M, Kerr Th, Whittet DCB, Duley WW. 1994. MNRAS 268:705 [truncated]... != {u'refstring': 'Adainson M, Kerr Th, Whittet DCB, Duley WW. 1994. MNRAS 268:705- [truncated]...
+- {u'bibcode': None,
++ {u'bibcode': '1994MNRAS.268..705A',
+-  u'refstring': u'Adainson M, Kerr Th, Whittet DCB, Duley WW. 1994. MNRAS 268:705-8'}
+?                -
+
++  u'refstring': 'Adainson M, Kerr Th, Whittet DCB, Duley WW. 1994. MNRAS 268:705-8'}
+
+======================================================================
+FAIL: test_0005_books (ReferenceResolver.Tests.ResolveTestCase.ResolveTestCase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/docker/workspace/Sync/Data/Geneva/Postdocs/ADS/ADSBackEndTask/Service/ReferenceResolver/Tests/ResolveTestCase.py", line 91, in test_0005_books
+    self._test_get_resolve(expected_response)
+  File "/home/docker/workspace/Sync/Data/Geneva/Postdocs/ADS/ADSBackEndTask/Service/ReferenceResolver/Tests/ResolveTestCase.py", line 44, in _test_get_resolve
+    self.assertEquals(json_response, expected_response)
+AssertionError: {u'refstring': u'Wali, K. 1991, Chandra: A Biography of S. Chandrasekhar (Chicag [truncated]... != {u'refstring': 'Wali, K. 1991, Chandra: A Biography of S. Chandrasekhar (Chicago [truncated]...
+- {u'bibcode': u'1991S&T....81..611W',
++ {u'bibcode': '1991cbsc.book.....W',
+-  u'refstring': u'Wali, K. 1991, Chandra: A Biography of S. Chandrasekhar (Chicago: Univ. Chicago Press)'}
+?                -
+
++  u'refstring': 'Wali, K. 1991, Chandra: A Biography of S. Chandrasekhar (Chicago: Univ. Chicago Press)'}
+
+======================================================================
+FAIL: test_0006_conferences (ReferenceResolver.Tests.ResolveTestCase.ResolveTestCase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/docker/workspace/Sync/Data/Geneva/Postdocs/ADS/ADSBackEndTask/Service/ReferenceResolver/Tests/ResolveTestCase.py", line 100, in test_0006_conferences
+    self._test_get_resolve(expected_response)
+  File "/home/docker/workspace/Sync/Data/Geneva/Postdocs/ADS/ADSBackEndTask/Service/ReferenceResolver/Tests/ResolveTestCase.py", line 44, in _test_get_resolve
+    self.assertEquals(json_response, expected_response)
+AssertionError: {u'refstring': u'Rees, M. J. 1984, in Formation and Evolution of Galaxies and La [truncated]... != {u'refstring': 'Rees, M. J. 1984, in Formation and Evolution of Galaxies and Lar [truncated]...
+- {u'bibcode': u'1984ASIC..117..271R',
+?              -     ^^^^ ^^^^
+
++ {u'bibcode': '1984fegl.proc..271R',
+?                   ^^^^ ^^^^
+
+-  u'refstring': u'Rees, M. J. 1984, in Formation and Evolution of Galaxies and Large Scale Structure in the Universe, ed. J. Audouze and T. T. Van (Dordrecht: Reidel), 271'}
+?                -
+
++  u'refstring': 'Rees, M. J. 1984, in Formation and Evolution of Galaxies and Large Scale Structure in the Universe, ed. J. Audouze and T. T. Van (Dordrecht: Reidel), 271'}
+
+======================================================================
+FAIL: test_0008_thesis (ReferenceResolver.Tests.ResolveTestCase.ResolveTestCase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/docker/workspace/Sync/Data/Geneva/Postdocs/ADS/ADSBackEndTask/Service/ReferenceResolver/Tests/ResolveTestCase.py", line 118, in test_0008_thesis
+    self._test_get_resolve(expected_response)
+  File "/home/docker/workspace/Sync/Data/Geneva/Postdocs/ADS/ADSBackEndTask/Service/ReferenceResolver/Tests/ResolveTestCase.py", line 44, in _test_get_resolve
+    self.assertEquals(json_response, expected_response)
+AssertionError: {u'refstring': u'Pollock, J. T. 1982, Ph. D. Thesis, University of Florida.', u' [truncated]... != {u'refstring': 'Pollock, J. T. 1982, Ph. D. Thesis, University of Florida.', u'b [truncated]...
+- {u'bibcode': u'1982BAAS...14..634P',
++ {u'bibcode': '1982PhDT.........1P',
+-  u'refstring': u'Pollock, J. T. 1982, Ph. D. Thesis, University of Florida.'}
+?                -
+
++  u'refstring': 'Pollock, J. T. 1982, Ph. D. Thesis, University of Florida.'}
+
+----------------------------------------------------------------------
+Ran 8 tests in 11.520s
+
+FAILED (failures=4)

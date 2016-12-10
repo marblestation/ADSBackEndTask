@@ -8,14 +8,23 @@ from ResolveHelper import ResolveHelper
 
 
 class Resolve(Resource):
+    """
+    REST API (JSON format) to resolve refstrings into bibcodes.
+    """
 
     def __init__(self):
+        """
+        Constructor.
+        """
         # TODO: For every request, this method is called. Optimize to make ResolveHelper created only once.
         self.resolve_helper = ResolveHelper()
 
 
     @marshal_with(ResolveModel.resolve_marshaller)
     def get(self, refstring):
+        """
+        Get bibcode from refstring.
+        """
         bibcode = None
         status = None # None until a fatal error occurs or the processing has finished
 
