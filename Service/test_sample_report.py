@@ -117,7 +117,7 @@ def print_report(refsample_analyzed, connection_problem, not_resolved, resolved,
         "Resolved: {} ({:.2f}%)\n".format(n_resolved, resolve_rate*100) + \
         "Resolved and matched: {} ({:.2f}%)".format(n_resolved_and_matched, success_rate*100))
     logging.info("-"*50)
-    logging.info("Connection problems:\n" + str(refsample_analyzed.loc[connection_problem].groupby(['status'])['bibcode'].agg({'count': len, 'percent':lambda x: np.round((len(x)*1. / n_connection_problem) * 100, 2)})))
+    logging.info("Connection problems:\n" + str(refsample_analyzed.loc[connection_problem].groupby(['status'])['bibcode'].agg({'count': len, 'percent':lambda x: np.round((len(x)*1. / n_total_analyzed) * 100, 2)})))
     logging.info("-"*50)
     logging.info("Not resolved:\n" + str(refsample_analyzed.loc[not_resolved].groupby(['status'])['bibcode'].agg({'count': len, 'percent':lambda x: np.round((len(x)*1. / n_total_analyzed) * 100, 2)})))
     logging.info("-"*50)

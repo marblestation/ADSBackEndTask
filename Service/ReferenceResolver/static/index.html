@@ -76,14 +76,14 @@
 
         <script>
         $('#resolve').click(function(){ 
-            var name = $("#refstring").val();
+            var refstring = $("#refstring").val().trim();
 
-            if (! name ) {
+            if (! refstring ) {
                 // Cancel the default action by returning false
                 return false;
             } else {
                 // Do not accept '/' in refstring or they will be interpret as part of the URL
-                name = name.replace("/", ":")
+                refstring = refstring.replace("/", ":")
             }
             $("#response_bibcode").val();
             $("#response_refstring").val();
@@ -92,7 +92,7 @@
             $.ajax({
                 type: "GET",
                 dataType: "json",
-                url: 'http://localhost:5000/resolve/' + name,
+                url: 'http://localhost:5000/resolve/' + refstring,
                 success: function (data) {
                     $("#response_bibcode").val(data['bibcode']);
                     $("#response_refstring").val(data['refstring']);

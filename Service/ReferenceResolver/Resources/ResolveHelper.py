@@ -168,7 +168,12 @@ class ResolveHelper(object):
         else:
             # Try to infer a publication
             # TODO: Implement a smarter way to isolate potential publication name
-            potential_bibstems = get_pub_abbreviation(refstring)
+            try:
+                potential_bibstems = get_pub_abbreviation(refstring)
+            except ValueError:
+                # get_pub_abbreviation may fail with non conventional charactersa (e.g., accents)
+                potential_bibstems = []
+            # Convert to dictionary:
             potential_bibstems = {x[1].replace(".", ""): x[0] for x in potential_bibstems}
         return potential_bibstems
 
